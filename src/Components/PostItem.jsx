@@ -1,0 +1,55 @@
+import React from 'react';
+import styled from "styled-components";
+
+
+const StyledCard = styled.div`
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  #root {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .app {
+    width: 800px;
+    margin: auto;
+
+  }
+
+  .post {
+
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border: 2px solid teal;
+    margin-top: 15px;
+  }
+`
+
+
+const PostItem = (props) => {
+    return (
+        <div>
+            <StyledCard>
+                <div className={'app'}>
+                    <div className={'post'}>
+                        <div className={'post__content'}>
+                            <strong>{props.post.title}</strong>
+                            <div>{props.post.id}. {props.post.body}</div>
+                        </div>
+                        <div className={'post__btns'}>
+                            <button> delete</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </StyledCard>
+        </div>
+    );
+};
+
+export default PostItem;
