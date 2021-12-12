@@ -13,33 +13,30 @@ const StyledApp = styled.div`
 `
 
 function App() {
-    const [posts, setPost] = useState([
+    const [posts, setPosts] = useState([
         {id: 1, title: 'JavaScript', body: 'Description'},
         {id: 2, title: 'JavaScript2', body: 'Description'}
     ])
-    const [title, setTitle] = useState('')
-    const [body, setBody] = useState('')
+    const [post, setPost] = useState({title:'', body:''})
 
     const bodyInputRef = useRef()
 
     const addNewPost = (e) => {
         e.preventDefault()
-        const newPost = {
-            id: Date.now(), title, body
-        }
-        setPost([...posts, newPost])
+        setPosts([...posts, {...post,id: Date.now()}])
+       setPost({title:'', body:''})
     };
 
     return (
         <StyledApp>
             <form>
-                <MyInput onChange={e => setTitle(e.target.value)}
-                         value={title}
+                <MyInput onChange={e => setPost({...post ,title: e.target.value})}
+                         value={post.title}
                          type="text"
                          placeholder='Название постов'/>
                 <MyInput
-                    onChange={e => setBody(e.target.value)}
-                    value={body}
+                    onChange={e => setPost({...post ,body: e.target.value})}
+                    value={post.body}
                     ref={bodyInputRef}
                     type="text"
                     placeholder='Описание поста'/>

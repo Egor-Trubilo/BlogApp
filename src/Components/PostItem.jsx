@@ -36,8 +36,8 @@ const PostItem = (props) => {
                 <div className={'app'}>
                     <div className={'post'}>
                         <div className={'post__content'}>
-                            <strong>{props.post.title}</strong>
-                            <div>{props.post.id}. {props.post.body}</div>
+                            <strong>{props.number}.{props.post.title}</strong>
+                            <div> {props.post.body}</div>
                         </div>
                         <div className={'post__btns'}>
                             <button> delete</button>
