@@ -5,6 +5,7 @@ import PostList from "./Components/PostList";
 
 import PostForm from "./Components/PostForm";
 import styled from "styled-components";
+import MySelect from "./Components/select/MySelect";
 
 
 const StyledApp = styled.div`
@@ -15,9 +16,11 @@ const StyledApp = styled.div`
 function App(props) {
 
     const [posts, setPosts] = useState([
-        {id: 1, title: 'JavaScript', body: 'Description'},
-        {id: 2, title: 'JavaScript2', body: 'Description'}
+        {id: 1, title: 'trewtrwe', body: 'Description'},
+        {id: 2, title: 'ffsdwew', body: 'Description'}
     ])
+
+    const [selectedSort, setSelectedSort] = useState('')
 
 const createPost = (newPost) => {setPosts([...posts, newPost])}
 
@@ -25,12 +28,32 @@ const createPost = (newPost) => {setPosts([...posts, newPost])}
         setPosts(posts.filter(p=>p.id !== post.id))
     }
 
+    const sortPosts = (sort) => {
+        setSelectedSort(sort)
+        setPosts([...posts].sort((a,b)=>a[sort].localeCompare(b[sort])))
+
+
+    }
+
     return (
         <StyledApp>
+
+
+
+            <PostForm create={createPost}/>
+            <MySelect
+                value={selectedSort}
+                onChange={sortPosts}
+                defaultValue='Сортировка'
+                options={[
+                    {value:'title', name: 'По названию'},
+                    {value:'body', name: 'По описанию'}
+                ]}
+            />
+
             {posts.length !== 0
                 ?  <PostList remove={removePost} posts={posts} title={'список постов 1'}/>
                 : <h1> Постов нет </h1> }
-            <PostForm create={createPost}/>
             <Counter/>
 
         </StyledApp>
