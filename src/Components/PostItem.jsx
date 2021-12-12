@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
+import MyButton from "./UI/button/MyButton";
 
 
 const StyledCard = styled.div`
@@ -40,7 +41,7 @@ const PostItem = (props) => {
                             <div> {props.post.body}</div>
                         </div>
                         <div className={'post__btns'}>
-                            <button> delete</button>
+                            <MyButton onClick={() =>props.remove(props.post)}>Delete</MyButton>
                         </div>
 
                     </div>
