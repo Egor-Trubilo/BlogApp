@@ -1,9 +1,7 @@
 import React, {useRef, useState} from 'react';
-import styled from "styled-components";
 import MyInput from "./UI/input/MyInput";
 import MyButton from "./UI/button/MyButton";
-import Counter from "./Counter";
-import PostList from "./PostList";
+
 
 
 
