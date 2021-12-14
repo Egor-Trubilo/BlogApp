@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useRef, useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import Counter from "./Components/Counter";
 import PostList from "./Components/PostList";
 
@@ -7,6 +7,7 @@ import PostForm from "./Components/PostForm";
 import styled from "styled-components";
 import MySelect from "./Components/select/MySelect";
 import MyInput from "./Components/UI/input/MyInput";
+import PostFilter from "./Components/PostFilter";
 
 
 const StyledApp = styled.div`
@@ -21,18 +22,20 @@ function App(props) {
         {id: 2, title: 'ffsdwew', body: 'Description'}
     ])
 
-    const [selectedSort, setSelectedSort] = useState('')
-    const [searchQuery, setSearchQuery] = useState('')
 
-    function getSortedPosts() {
+const [filter, setFilter] = useState({sort: '', query: '',})
 
-        if (selectedSort) {
-            return [...posts].sort((a,b)=>a[selectedSort].localeCompare(b[selectedSort]))
+
+    const sortedPosts = useMemo(()=>{
+        if (filter.sort) {
+            return [...posts].sort((a,b)=>a[filter.sort].localeCompare(b[filter.sort]))
         }
         return posts
-    }
+    }, [filter.sort, posts])
 
-    const sortedPosts = getSortedPosts()
+    const sortedAndSearchedPosts = useMemo(()=>{
+    return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query))
+    }, [filter.query, sortedPosts])
 
 const createPost = (newPost) => {setPosts([...posts, newPost])}
 
@@ -40,37 +43,12 @@ const createPost = (newPost) => {setPosts([...posts, newPost])}
         setPosts(posts.filter(p=>p.id !== post.id))
     }
 
-    const sortPosts = (sort) => {
-        setSelectedSort(sort)
-
-
-
-    }
-
     return (
         <StyledApp>
-
-
-
+            <PostFilter filter={filter} setFilter={setFilter}/>
             <PostForm create={createPost}/>
-            <MyInput
-                value={searchQuery}
-                onChange={e=> setSearchQuery(e.target.value)}
-            placeholder='Поиск...'/>
-            <MySelect
-                value={selectedSort}
-                onChange={sortPosts}
-                defaultValue='Сортировка'
-                options={[
-                    {value:'title', name: 'По названию'},
-                    {value:'body', name: 'По описанию'}
-                ]}
-            />
+                <PostList remove={removePost} posts={sortedAndSearchedPosts} title={'список постов 1'}/>
 
-            {posts.length !== 0
-                ?  <PostList remove={removePost} posts={sortedPosts} title={'список постов 1'}/>
-                : <h1> Постов нет </h1> }
-            <Counter/>
 
         </StyledApp>
 
