@@ -10,6 +10,8 @@ import MyInput from "./Components/UI/input/MyInput";
 import PostFilter from "./Components/PostFilter";
 import MyModal from "./Components/UI/MyModal/MyModal";
 import MyButton from "./Components/UI/button/MyButton";
+import {usePosts} from "./hoks/usePosts";
+import {queryByTestId} from "@testing-library/react";
 
 
 const StyledApp = styled.div`
@@ -17,28 +19,13 @@ const StyledApp = styled.div`
   width: 800px;
 `
 
-function App(props) {
+function App() {
 
-    const [posts, setPosts] = useState([
-        {id: 1, title: 'trewtrwe', body: 'Description'},
-        {id: 2, title: 'ffsdwew', body: 'Description'}
-    ])
-
-
+    const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sort: '', query: '',})
     const [modal, setModal] = useState(false);
+    const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
-
-    const sortedPosts = useMemo(() => {
-        if (filter.sort) {
-            return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]))
-        }
-        return posts
-    }, [filter.sort, posts])
-
-    const sortedAndSearchedPosts = useMemo(() => {
-        return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query))
-    }, [filter.query, sortedPosts])
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
