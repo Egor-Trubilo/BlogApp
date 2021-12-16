@@ -27,7 +27,7 @@ if(!posts.length) {
                         post={post}
                         />
                     </CSSTransition>
-                        )}
+                        ).reverse()}
 
             </TransitionGroup>
 

@@ -1,19 +1,15 @@
 import './App.css';
-import React, {useMemo, useState} from 'react'
-import Counter from "./Components/Counter";
+import React, {useEffect, useState} from 'react'
 import PostList from "./Components/PostList";
 
 import PostForm from "./Components/PostForm";
 import styled from "styled-components";
-import MySelect from "./Components/select/MySelect";
-import MyInput from "./Components/UI/input/MyInput";
 import PostFilter from "./Components/PostFilter";
 import MyModal from "./Components/UI/MyModal/MyModal";
 import MyButton from "./Components/UI/button/MyButton";
 import {usePosts} from "./hoks/usePosts";
-import {queryByTestId} from "@testing-library/react";
-import axios from "axios";
-import async from "async";
+import PostService from "./API/PostService";
+
 
 
 const StyledApp = styled.div`
@@ -29,6 +25,11 @@ function App() {
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
 
+    useEffect(()=> {
+        fetchPosts()
+    }, [])
+
+
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
         setModal(false)
@@ -36,8 +37,8 @@ function App() {
 
 
     async function fetchPosts(){
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
-       setPosts(response.data)
+        const posts = await PostService.getAll()
+       setPosts(posts)
     }
 
 
@@ -48,7 +49,6 @@ function App() {
 
     return (
         <StyledApp>
-            <button onClick={fetchPosts}>Get Post</button>
             <MyButton style={{marginTop: 30}} onClick={() => setModal(true)}>
                 Создать пользователя
             </MyButton>
