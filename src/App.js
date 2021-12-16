@@ -9,6 +9,7 @@ import MyModal from "./Components/UI/MyModal/MyModal";
 import MyButton from "./Components/UI/button/MyButton";
 import {usePosts} from "./hoks/usePosts";
 import PostService from "./API/PostService";
+import Loader from "./Components/UI/Loader/Loader";
 
 
 
@@ -22,7 +23,9 @@ function App() {
     const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sort: '', query: '',})
     const [modal, setModal] = useState(false);
+    const [isPostLoading, setIsPostLoading] =  useState(false);
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
+
 
 
     useEffect(()=> {
@@ -37,8 +40,10 @@ function App() {
 
 
     async function fetchPosts(){
+        setIsPostLoading(true)
         const posts = await PostService.getAll()
        setPosts(posts)
+        setIsPostLoading(false)
     }
 
 
@@ -49,6 +54,7 @@ function App() {
 
     return (
         <StyledApp>
+
             <MyButton style={{marginTop: 30}} onClick={() => setModal(true)}>
                 Создать пользователя
             </MyButton>
@@ -61,8 +67,10 @@ function App() {
 
 
             <PostFilter filter={filter} setFilter={setFilter}/>
-
-            <PostList remove={removePost} posts={sortedAndSearchedPosts} title={'список постов 1'}/>
+            {isPostLoading
+            ? <div style={{display: 'flex', justifyContent: 'center', marginTop: "50px"}}><Loader/></div>
+            : <PostList remove={removePost} posts={sortedAndSearchedPosts} title={'список постов 1'}/>
+            }
 
 
         </StyledApp>
