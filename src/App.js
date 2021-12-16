@@ -7,9 +7,10 @@ import styled from "styled-components";
 import PostFilter from "./Components/PostFilter";
 import MyModal from "./Components/UI/MyModal/MyModal";
 import MyButton from "./Components/UI/button/MyButton";
-import {usePosts} from "./hoks/usePosts";
+import {usePosts} from "./hooks/usePosts";
 import PostService from "./API/PostService";
 import Loader from "./Components/UI/Loader/Loader";
+import {useFetching} from "./hooks/useFetching";
 
 
 
@@ -23,8 +24,11 @@ function App() {
     const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sort: '', query: '',})
     const [modal, setModal] = useState(false);
-    const [isPostLoading, setIsPostLoading] =  useState(false);
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
+    const[fetchPosts, isPostLoading, postError] = useFetching(async ()=> {
+        const posts = await PostService.getAll()
+        setPosts(posts)
+    })
 
 
 
@@ -36,14 +40,6 @@ function App() {
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
         setModal(false)
-    }
-
-
-    async function fetchPosts(){
-        setIsPostLoading(true)
-        const posts = await PostService.getAll()
-       setPosts(posts)
-        setIsPostLoading(false)
     }
 
 
@@ -67,9 +63,13 @@ function App() {
 
 
             <PostFilter filter={filter} setFilter={setFilter}/>
+            {postError && <h1> Ошибка! ${postError}</h1>
+            }
             {isPostLoading
-            ? <div style={{display: 'flex', justifyContent: 'center', marginTop: "50px"}}><Loader/></div>
-            : <PostList remove={removePost} posts={sortedAndSearchedPosts} title={'список постов 1'}/>
+            ? <div style={{display: 'flex', justifyContent: 'center', marginTop: "50px"}}>
+                    <Loader/>
+            </div>
+            : <PostList remove={removePost} posts={sortedAndSearchedPosts} title={'Мои посты'}/>
             }
 
 
